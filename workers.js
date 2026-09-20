@@ -4,8 +4,21 @@ export default {
 
     // Telegram Webhook
     if (request.method === "POST" && url.pathname === "/webhook") {
-      return handleWebhook(request, env);
-    }
+
+  const secret =
+    request.headers.get("X-Telegram-Bot-Api-Secret-Token");
+
+  if (
+    !env.TG_WEBHOOK_SECRET ||
+    secret !== env.TG_WEBHOOK_SECRET
+  ) {
+    return new Response("Forbidden", {
+      status: 403
+    });
+  }
+
+  return handleWebhook(request, env);
+}
 
     // 文件下载
     if (request.method === "GET" && url.pathname.startsWith("/file/")) {

@@ -1,5 +1,12 @@
 {
   "name": "ooi-telegrambot-img",
   "main": "workers.js",
-  "compatibility_date": "2026-09-20"
+  "compatibility_date": "2026-09-20",
+
+  "r2_buckets": [
+    {
+      "binding": "DRIVE",
+      "bucket_name": "ooi-telegram-drive"
+    }
+  ]
 }

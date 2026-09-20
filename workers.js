@@ -52,6 +52,12 @@ async function handleWebhook(request, env) {
   const chatId = message.chat?.id;
   const userId = String(message.from?.id || "");
   const text = message.text?.trim() || "";
+  
+  // 私人模式：仅允许 ADMIN_ID
+  if (!env.ADMIN_ID || userId !== String(env.ADMIN_ID)) {
+    return ok();
+  }
+  
 
   // ----------------------------------------------------------
   // 获取自己的 Telegram ID
@@ -107,38 +113,11 @@ async function handleWebhook(request, env) {
   // ADMIN_ID 尚未设置
   // ----------------------------------------------------------
 
-  if (!env.ADMIN_ID) {
-    await sendMessage(
-      env,
-      chatId,
-`⚠️ 尚未配置 ADMIN_ID。
-
-请发送：
-
-/id
-
-取得你的 Telegram ID 后，在 Cloudflare Worker
-运行时变量中添加：
-
-ADMIN_ID=你的Telegram数字ID`
-    );
-
-    return ok();
-  }
 
   // ----------------------------------------------------------
   // 仅允许管理员
   // ----------------------------------------------------------
 
-  if (userId !== String(env.ADMIN_ID)) {
-    await sendMessage(
-      env,
-      chatId,
-      "⛔ 无权限使用此私人网盘。"
-    );
-
-    return ok();
-  }
 
   // ----------------------------------------------------------
   // LIST
